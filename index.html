@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,68 +8,92 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --black:        #0c0b0a;
-      --black2:       #111010;
-      --black3:       #1a1917;
-      --black4:       #222120;
+    /* ─── DARK THEME (default) ─────────────────────────────────── */
+    :root,
+    [data-theme="dark"] {
+      --bg:           #0c0b0a;
+      --bg2:          #111010;
+      --bg3:          #1a1917;
+      --bg4:          #222120;
       --brown:        #6b5a4e;
       --brown-light:  #9c8578;
       --brown-muted:  rgba(107,90,78,0.15);
-      --white:        #f0ece6;
-      --gray-1:       #c8c2bc;
-      --gray-2:       #8a847e;
-      --gray-3:       #4a4642;
+      --text:         #f0ece6;
+      --text-2:       #c8c2bc;
+      --text-3:       #8a847e;
+      --text-4:       #4a4642;
       --border:       rgba(240,236,230,0.07);
       --border2:      rgba(240,236,230,0.12);
-      --font-display: 'DM Serif Display', serif;
-      --font-body:    'Outfit', sans-serif;
-      --font-mono:    'DM Mono', monospace;
+      --nav-bg:       rgba(12,11,10,0.92);
+      --card-bg:      rgba(12,11,10,0.88);
+      --card-hover:   rgba(26,25,23,0.95);
+      --input-bg:     #1a1917;
+      --shadow:       0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    /* ─── LIGHT THEME ──────────────────────────────────────────── */
+    [data-theme="light"] {
+      --bg:           #f5f2ee;
+      --bg2:          #ede9e3;
+      --bg3:          #e4dfd8;
+      --bg4:          #d8d2ca;
+      --brown:        #6b5a4e;
+      --brown-light:  #7a6255;
+      --brown-muted:  rgba(107,90,78,0.1);
+      --text:         #1a1714;
+      --text-2:       #3a3330;
+      --text-3:       #6b6460;
+      --text-4:       #a09890;
+      --border:       rgba(26,23,20,0.1);
+      --border2:      rgba(26,23,20,0.18);
+      --nav-bg:       rgba(245,242,238,0.94);
+      --card-bg:      rgba(245,242,238,0.95);
+      --card-hover:   rgba(228,223,216,0.98);
+      --input-bg:     #ede9e3;
+      --shadow:       0 4px 24px rgba(0,0,0,0.08);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--black);
-      color: var(--white);
-      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
       font-size: 15px;
       line-height: 1.7;
       overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
     }
 
     ::-webkit-scrollbar { width: 3px; }
-    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--brown); }
 
-    /* ─── BACKGROUND PHOTO SECTIONS ──────────────────────────────
-       Replace each URL below with your own photo path.
-       Example: url('images/woods1.jpg')
-       Keep the gradient overlays — they ensure text stays readable.
-    ──────────────────────────────────────────────────────────── */
-
+    /* ─── BACKGROUND PHOTO LAYER ───────────────────────────────── */
     .bg-photo {
       position: absolute;
       inset: 0;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      opacity: 0.13;  /* subtle — increase slightly if you want more visible */
+      opacity: 0.12;
       pointer-events: none;
       z-index: 0;
+      transition: opacity 0.3s;
     }
 
-    /* Fade to black at edges so content blends naturally */
+    [data-theme="light"] .bg-photo { opacity: 0.06; }
+
     .bg-photo::after {
       content: '';
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(to bottom, var(--black) 0%, transparent 25%, transparent 75%, var(--black) 100%),
-        linear-gradient(to right, var(--black) 0%, transparent 30%, transparent 70%, var(--black) 100%);
+        linear-gradient(to bottom, var(--bg) 0%, transparent 25%, transparent 75%, var(--bg) 100%),
+        linear-gradient(to right,  var(--bg) 0%, transparent 30%, transparent 70%, var(--bg) 100%);
     }
 
-    /* NAV */
+    /* ─── NAV ──────────────────────────────────────────────────── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -77,140 +101,194 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.25rem 3rem;
-      background: rgba(12,11,10,0.92);
+      padding: 0 3rem;
+      height: 60px;
+      background: var(--nav-bg);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
+      transition: background 0.3s, border-color 0.3s;
     }
 
     .nav-logo {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      color: var(--white);
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: var(--text);
       text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: color 0.3s;
     }
 
     .nav-logo em { color: var(--brown-light); font-style: italic; }
 
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-center {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
 
-    .nav-links a {
-      color: var(--gray-2);
+    .nav-center a {
+      color: var(--text-3);
       text-decoration: none;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       transition: color 0.2s;
     }
 
-    .nav-links a:hover { color: var(--white); }
+    .nav-center a:hover { color: var(--text); }
 
-    /* ─── HERO ──────────────────────────────────────────────────── */
+    /* ─── THEME TOGGLE ─────────────────────────────────────────── */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 999px;
+      padding: 0.3rem 0.75rem;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover { border-color: var(--brown-light); }
+
+    .toggle-icon { font-size: 0.85rem; line-height: 1; }
+
+    .toggle-track {
+      width: 32px;
+      height: 18px;
+      background: var(--bg4);
+      border-radius: 999px;
+      position: relative;
+      border: 1px solid var(--border2);
+      transition: background 0.3s;
+    }
+
+    [data-theme="light"] .toggle-track { background: var(--brown); }
+
+    .toggle-thumb {
+      width: 12px;
+      height: 12px;
+      background: var(--brown-light);
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 2px;
+      transform: translateY(-50%);
+      transition: left 0.25s, background 0.3s;
+    }
+
+    [data-theme="light"] .toggle-thumb {
+      left: calc(100% - 14px);
+      background: var(--bg);
+    }
+
+    .toggle-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      min-width: 28px;
+      transition: color 0.3s;
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────────── */
     #hero {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: center;
       padding: 8rem 3rem 5rem;
       position: relative;
       overflow: hidden;
     }
 
-    /* SWAP: Replace with your best woods/urban photo */
+    /* SWAP: Replace with your own photo path */
     #hero .bg-photo {
-      background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=1600&q=60');
-      opacity: 0.18;
+      background-image: url('images/hero-bg.jpg');
     }
 
-    .hero-bg-text {
-      position: absolute;
-      top: 50%;
-      right: -2rem;
-      transform: translateY(-50%);
-      font-family: var(--font-display);
-      font-size: clamp(10rem, 25vw, 22rem);
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(240,236,230,0.04);
-      line-height: 1;
-      pointer-events: none;
-      user-select: none;
-      white-space: nowrap;
-      z-index: 1;
-    }
+    .hero-content { position: relative; z-index: 2; max-width: 680px; }
 
-    .hero-content { position: relative; z-index: 2; }
-
-    .hero-line {
-      width: 48px; height: 1px;
-      background: var(--brown);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.6s 0.1s forwards;
-    }
-
-    .hero-name {
-      font-family: var(--font-display);
-      font-size: clamp(4rem, 12vw, 10rem);
-      line-height: 0.92;
-      letter-spacing: -0.03em;
-      color: var(--white);
-      opacity: 0;
-      animation: fadeUp 0.7s 0.25s forwards;
-    }
-
-    .hero-name .italic { font-style: italic; color: var(--gray-1); }
-
-    .hero-role {
+    .hero-eyebrow {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      margin-top: 1.75rem;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
       opacity: 0;
-      animation: fadeUp 0.6s 0.45s forwards;
+      animation: fadeUp 0.5s 0.1s forwards;
     }
 
-    .hero-role-text {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
+    .hero-eyebrow-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--brown-light);
+      background: var(--brown-muted);
+      border: 1px solid rgba(107,90,78,0.25);
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
     }
 
-    .hero-role-divider { width: 1px; height: 14px; background: var(--gray-3); }
+    .hero-eyebrow-line {
+      flex: 1;
+      max-width: 60px;
+      height: 1px;
+      background: var(--brown);
+      opacity: 0.5;
+    }
 
-    .hero-role-sub {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.1em;
-      color: var(--gray-2);
+    .hero-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.25s forwards;
+      transition: color 0.3s;
+    }
+
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-style: italic;
+      color: var(--text-3);
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.4s forwards;
+      transition: color 0.3s;
     }
 
     .hero-desc {
-      max-width: 460px;
-      color: var(--gray-2);
-      font-size: 0.9rem;
-      line-height: 1.9;
-      margin-top: 1.75rem;
+      color: var(--text-3);
+      font-size: 0.95rem;
+      line-height: 1.95;
+      margin-bottom: 2.5rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--brown);
       opacity: 0;
-      animation: fadeUp 0.6s 0.6s forwards;
+      animation: fadeUp 0.6s 0.55s forwards;
     }
 
     .hero-cta {
       display: flex;
       gap: 1rem;
-      margin-top: 2.5rem;
       opacity: 0;
-      animation: fadeUp 0.6s 0.75s forwards;
+      animation: fadeUp 0.6s 0.7s forwards;
     }
 
-    /* BUTTONS */
+    /* ─── BUTTONS ──────────────────────────────────────────────── */
     .btn {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       padding: 0.7rem 1.6rem;
-      font-family: var(--font-body);
+      font-family: 'Outfit', sans-serif;
       font-size: 0.82rem;
       font-weight: 500;
       letter-spacing: 0.04em;
@@ -218,24 +296,24 @@
       cursor: pointer;
       transition: all 0.2s;
       border: none;
-      border-radius: 1px;
+      border-radius: 2px;
     }
 
-    .btn-primary { background: var(--white); color: var(--black); }
-    .btn-primary:hover { background: var(--gray-1); transform: translateY(-1px); }
+    .btn-primary { background: var(--text); color: var(--bg); }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
 
     .btn-ghost {
       background: transparent;
-      color: var(--gray-1);
+      color: var(--text-2);
       border: 1px solid var(--border2);
     }
 
     .btn-ghost:hover { border-color: var(--brown-light); color: var(--brown-light); transform: translateY(-1px); }
 
-    /* DIVIDER */
+    /* ─── DIVIDER ──────────────────────────────────────────────── */
     .divider { width: 100%; height: 1px; background: var(--border); }
 
-    /* SECTIONS */
+    /* ─── SECTIONS ─────────────────────────────────────────────── */
     .p-section {
       padding: 6rem 3rem;
       max-width: 1100px;
@@ -253,33 +331,28 @@
     }
 
     .section-num {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
       color: var(--brown-light);
       letter-spacing: 0.1em;
     }
 
     .section-title {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 5vw, 3.75rem);
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
       letter-spacing: -0.03em;
       line-height: 1.05;
-      color: var(--white);
+      color: var(--text);
+      transition: color 0.3s;
     }
 
-    .section-title em { font-style: italic; color: var(--gray-2); }
+    .section-title em { font-style: italic; color: var(--text-3); }
 
     /* ─── ABOUT ─────────────────────────────────────────────────── */
-    #about-wrap {
-      position: relative;
-      overflow: hidden;
-    }
+    #about-wrap { position: relative; overflow: hidden; }
 
-    /* SWAP: Replace with a soft woods or urban texture photo */
-    #about-wrap .bg-photo {
-      background-image: url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=1600&q=60');
-      opacity: 0.08;
-    }
+    /* SWAP: Replace with your own photo path */
+    #about-wrap .bg-photo { background-image: url('images/about-bg.jpg'); }
 
     .about-grid {
       display: grid;
@@ -292,19 +365,20 @@
 
     .photo-placeholder {
       aspect-ratio: 3/4;
-      background: var(--black3);
+      background: var(--bg3);
       border: 1px solid var(--border2);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 0.75rem;
-      color: var(--gray-3);
-      font-family: var(--font-mono);
+      color: var(--text-4);
+      font-family: 'DM Mono', monospace;
       font-size: 0.72rem;
       letter-spacing: 0.08em;
       position: relative;
       overflow: hidden;
+      transition: background 0.3s;
     }
 
     .photo-placeholder::before {
@@ -326,7 +400,7 @@
     .photo-placeholder span { position: relative; z-index: 1; }
 
     .about-text p {
-      color: var(--gray-2);
+      color: var(--text-3);
       margin-bottom: 1.4rem;
       font-size: 0.92rem;
       line-height: 1.95;
@@ -334,7 +408,7 @@
       z-index: 2;
     }
 
-    .about-text strong { color: var(--white); font-weight: 500; }
+    .about-text strong { color: var(--text); font-weight: 500; }
 
     .about-details {
       display: grid;
@@ -347,10 +421,14 @@
       z-index: 2;
     }
 
-    .about-detail { background: rgba(12,11,10,0.85); padding: 1.25rem; }
+    .about-detail {
+      background: var(--bg);
+      padding: 1.25rem;
+      transition: background 0.3s;
+    }
 
     .detail-label {
-      font-family: var(--font-mono);
+      font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -358,7 +436,7 @@
       margin-bottom: 0.3rem;
     }
 
-    .detail-val { font-size: 0.88rem; color: var(--gray-1); }
+    .detail-val { font-size: 0.88rem; color: var(--text-2); }
 
     .about-links { display: flex; gap: 0.75rem; flex-wrap: wrap; position: relative; z-index: 2; }
 
@@ -368,14 +446,11 @@
       overflow: hidden;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
+      transition: border-color 0.3s;
     }
 
-    /* SWAP: Replace with a calm woods canopy or city texture */
-    .skills-bg .bg-photo {
-      background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=1600&q=60');
-      background-position: center 30%;
-      opacity: 0.07;
-    }
+    /* SWAP: Replace with your own photo path */
+    .skills-bg .bg-photo { background-image: url('images/skills-bg.jpg'); }
 
     .skills-grid {
       display: grid;
@@ -387,7 +462,7 @@
     }
 
     .skill-card {
-      background: rgba(17,16,16,0.88);
+      background: var(--bg2);
       padding: 1.75rem 1.5rem;
       position: relative;
       transition: background 0.2s;
@@ -406,14 +481,14 @@
       transition: transform 0.25s;
     }
 
-    .skill-card:hover { background: rgba(26,25,23,0.95); }
+    .skill-card:hover { background: var(--bg3); }
     .skill-card:hover::after { transform: scaleX(1); }
     .skill-card:hover .skill-name { color: var(--brown-light); }
 
     .skill-num {
-      font-family: var(--font-mono);
+      font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
-      color: var(--gray-3);
+      color: var(--text-4);
       letter-spacing: 0.1em;
       margin-bottom: 0.75rem;
     }
@@ -421,31 +496,24 @@
     .skill-name {
       font-size: 1rem;
       font-weight: 500;
-      color: var(--white);
+      color: var(--text);
       transition: color 0.2s;
       margin-bottom: 0.25rem;
     }
 
     .skill-type {
-      font-family: var(--font-mono);
+      font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--gray-3);
+      color: var(--text-4);
     }
 
     /* ─── PROJECTS ──────────────────────────────────────────────── */
-    #projects-wrap {
-      position: relative;
-      overflow: hidden;
-    }
+    #projects-wrap { position: relative; overflow: hidden; }
 
-    /* SWAP: Replace with an urban architecture or street photo */
-    #projects-wrap .bg-photo {
-      background-image: url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=60');
-      background-position: center 60%;
-      opacity: 0.07;
-    }
+    /* SWAP: Replace with your own photo path */
+    #projects-wrap .bg-photo { background-image: url('images/projects-bg.jpg'); }
 
     .projects-stack {
       display: flex;
@@ -457,26 +525,23 @@
     }
 
     .project-card {
-      background: rgba(12,11,10,0.88);
+      background: var(--card-bg);
       padding: 2rem 2.5rem;
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 3rem;
       align-items: center;
-      transition: background 0.2s;
+      transition: background 0.2s, border-color 0.2s;
       border-left: 2px solid transparent;
     }
 
-    .project-card:hover {
-      background: rgba(26,25,23,0.95);
-      border-left-color: var(--brown);
-    }
+    .project-card:hover { background: var(--card-hover); border-left-color: var(--brown); }
 
     .project-status {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-family: var(--font-mono);
+      font-family: 'DM Mono', monospace;
       font-size: 0.68rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -492,16 +557,17 @@
     }
 
     .project-title {
-      font-family: var(--font-display);
+      font-family: 'DM Serif Display', serif;
       font-size: 1.75rem;
       letter-spacing: -0.02em;
-      color: var(--white);
+      color: var(--text);
       margin-bottom: 0.5rem;
       line-height: 1.1;
+      transition: color 0.3s;
     }
 
     .project-desc {
-      color: var(--gray-2);
+      color: var(--text-3);
       font-size: 0.85rem;
       line-height: 1.8;
       max-width: 520px;
@@ -511,117 +577,117 @@
     .project-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 
     .tag {
-      font-family: var(--font-mono);
+      font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
       letter-spacing: 0.08em;
       padding: 0.2rem 0.65rem;
-      background: var(--black4);
+      background: var(--bg4);
       border: 1px solid var(--border2);
-      color: var(--gray-2);
+      color: var(--text-3);
       border-radius: 1px;
     }
 
     .project-arrow {
       font-size: 1.5rem;
-      color: var(--gray-3);
+      color: var(--text-4);
       transition: color 0.2s, transform 0.2s;
     }
 
     .project-card:hover .project-arrow { color: var(--brown-light); transform: translateX(4px); }
 
-    /* ─── PHOTO STRIP ───────────────────────────────────────────────
-       A horizontal scrolling strip of your photos.
-       Replace the background-image URLs below with your own photos.
-       Recommended: 6–10 photos, landscape or square crop works best.
-    ──────────────────────────────────────────────────────────────── */
-    .photo-strip-wrap {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 3rem 0;
-      overflow: hidden;
+    /* ─── CERTIFICATES ──────────────────────────────────────────── */
+    #certs-wrap { position: relative; overflow: hidden; }
+
+    /* SWAP: Replace with your own photo path */
+    #certs-wrap .bg-photo { background-image: url('images/certs-bg.jpg'); }
+
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      position: relative;
+      z-index: 2;
+    }
+
+    .cert-card {
+      background: var(--card-bg);
+      padding: 1.75rem 2rem;
+      border-left: 2px solid transparent;
+      transition: background 0.2s, border-color 0.2s;
       position: relative;
     }
 
-    .photo-strip-label {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
+    .cert-card:hover { background: var(--card-hover); border-left-color: var(--brown); }
+
+    .cert-icon {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .cert-issuer {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--brown-light);
-      padding: 0 3rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .cert-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+      transition: color 0.3s;
+    }
+
+    .cert-desc {
+      color: var(--text-3);
+      font-size: 0.82rem;
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+
+    .cert-footer {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      justify-content: space-between;
     }
 
-    .photo-strip-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    .photo-strip {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding: 0 3rem;
-      scrollbar-width: thin;
-      scrollbar-color: var(--brown) transparent;
-      scroll-behavior: smooth;
-    }
-
-    .photo-strip::-webkit-scrollbar { height: 3px; }
-    .photo-strip::-webkit-scrollbar-track { background: transparent; }
-    .photo-strip::-webkit-scrollbar-thumb { background: var(--brown); border-radius: 2px; }
-
-    .strip-photo {
-      /* SWAP: Replace background-image with your own photo */
-      flex: 0 0 220px;
-      height: 160px;
-      background-color: var(--black3);
-      background-size: cover;
-      background-position: center;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.2s;
-      border: 1px solid var(--border);
-    }
-
-    .strip-photo:hover { opacity: 0.85; transform: scale(1.02); }
-
-    /* Placeholder pattern for empty photo slots */
-    .strip-photo.placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-mono);
+    .cert-date {
+      font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
       letter-spacing: 0.1em;
-      color: var(--gray-3);
-      background-image: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 10px,
-        rgba(240,236,230,0.015) 10px,
-        rgba(240,236,230,0.015) 11px
-      );
+      color: var(--text-4);
+    }
+
+    .cert-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: var(--brown-muted);
+      border: 1px solid rgba(107,90,78,0.25);
+      color: var(--brown-light);
+    }
+
+    .cert-link {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
     }
 
     /* ─── CONTACT ───────────────────────────────────────────────── */
-    #contact-wrap {
-      position: relative;
-      overflow: hidden;
-    }
+    #contact-wrap { position: relative; overflow: hidden; }
 
-    /* SWAP: Replace with your favourite atmospheric photo */
-    #contact-wrap .bg-photo {
-      background-image: url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=1600&q=60');
-      background-position: center 70%;
-      opacity: 0.08;
-    }
+    /* SWAP: Replace with your own photo path */
+    #contact-wrap .bg-photo { background-image: url('images/contact-bg.jpg'); }
 
     .contact-grid {
       display: grid;
@@ -632,17 +698,19 @@
     }
 
     .contact-headline {
-      font-family: var(--font-display);
+      font-family: 'DM Serif Display', serif;
       font-size: clamp(1.75rem, 4vw, 2.75rem);
       line-height: 1.2;
       letter-spacing: -0.02em;
       margin-bottom: 1.25rem;
+      color: var(--text);
+      transition: color 0.3s;
     }
 
     .contact-headline em { font-style: italic; color: var(--brown-light); }
 
     .contact-desc {
-      color: var(--gray-2);
+      color: var(--text-3);
       font-size: 0.88rem;
       line-height: 1.9;
       margin-bottom: 2.5rem;
@@ -655,21 +723,17 @@
       align-items: center;
       justify-content: space-between;
       padding: 1.1rem 1.25rem;
-      background: rgba(12,11,10,0.9);
+      background: var(--card-bg);
       text-decoration: none;
-      color: var(--gray-1);
+      color: var(--text-2);
       font-size: 0.85rem;
       transition: all 0.2s;
     }
 
-    .contact-link:hover {
-      background: rgba(26,25,23,0.95);
-      color: var(--white);
-      padding-left: 1.75rem;
-    }
+    .contact-link:hover { background: var(--card-hover); color: var(--text); padding-left: 1.75rem; }
 
     .contact-link-label {
-      font-family: var(--font-mono);
+      font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -680,7 +744,7 @@
     .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
 
     .form-label {
-      font-family: var(--font-mono);
+      font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -688,37 +752,38 @@
     }
 
     .form-input {
-      background: rgba(26,25,23,0.9);
+      background: var(--input-bg);
       border: 1px solid var(--border2);
-      color: var(--white);
+      color: var(--text);
       padding: 0.75rem 1rem;
-      font-family: var(--font-body);
+      font-family: 'Outfit', sans-serif;
       font-size: 0.88rem;
       outline: none;
       border-radius: 1px;
-      transition: border-color 0.2s, background 0.2s;
+      transition: border-color 0.2s, background 0.3s, color 0.3s;
     }
 
-    .form-input::placeholder { color: var(--gray-3); }
-    .form-input:focus { border-color: var(--brown); background: var(--black4); }
+    .form-input::placeholder { color: var(--text-4); }
+    .form-input:focus { border-color: var(--brown); }
     textarea.form-input { resize: vertical; min-height: 120px; }
 
-    /* FOOTER */
+    /* ─── FOOTER ───────────────────────────────────────────────── */
     footer {
       padding: 1.75rem 3rem;
       border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-family: var(--font-mono);
+      font-family: 'DM Mono', monospace;
       font-size: 0.72rem;
       letter-spacing: 0.08em;
-      color: var(--gray-3);
+      color: var(--text-4);
+      transition: border-color 0.3s, color 0.3s;
     }
 
     footer span:first-child { color: var(--brown-light); }
 
-    /* ANIMATIONS */
+    /* ─── ANIMATIONS ───────────────────────────────────────────── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(18px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -729,51 +794,53 @@
       50%       { opacity: 0.35; }
     }
 
+    /* ─── RESPONSIVE ───────────────────────────────────────────── */
     @media (max-width: 768px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { display: none; }
+      nav { padding: 0 1.5rem; }
+      .nav-center { display: none; }
       #hero { padding: 6rem 1.5rem 3rem; }
       .p-section { padding: 4rem 1.5rem; }
       .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
       .project-card { grid-template-columns: 1fr; }
+      .certs-grid { grid-template-columns: 1fr; }
       footer { flex-direction: column; gap: 0.5rem; text-align: center; }
-      .photo-strip-label, .photo-strip { padding-left: 1.5rem; padding-right: 1.5rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
+  <!-- ─── NAV ─────────────────────────────────────────────────── -->
   <nav>
     <a href="#hero" class="nav-logo">Brian <em>Vo</em></a>
-    <ul class="nav-links">
+    <ul class="nav-center">
       <li><a href="#about">About</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#projects">Projects</a></li>
-      <li><a href="#photos">Photos</a></li>
+      <li><a href="#certificates">Certificates</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+      <span class="toggle-icon">🌙</span>
+      <div class="toggle-track"><div class="toggle-thumb"></div></div>
+      <span class="toggle-icon">☀️</span>
+    </button>
   </nav>
 
-  <!-- ─── HERO ──────────────────────────────────────────────────── -->
+  <!-- ─── HERO ─────────────────────────────────────────────────── -->
   <section id="hero">
-    <!-- SWAP background photo here -->
     <div class="bg-photo" style="background-image: url('images/hero-bg.jpg');"></div>
-    <div class="hero-bg-text" aria-hidden="true">BV</div>
     <div class="hero-content">
-      <div class="hero-line"></div>
-      <h1 class="hero-name">
-        Brian<br><span class="italic">Vo.</span>
-      </h1>
-      <div class="hero-role">
-        <span class="hero-role-text">CS Student</span>
-        <div class="hero-role-divider"></div>
-        <span class="hero-role-sub">Full-Stack Developer</span>
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-pill">Available for hire</span>
+        <div class="hero-eyebrow-line"></div>
       </div>
+      <h1 class="hero-name">Brian Vo</h1>
+      <p class="hero-title">Computer Science Student &amp; Full-Stack Developer</p>
       <p class="hero-desc">
-        Building clean, efficient software from the ground up.
-        A full-stack generalist with an eye for detail — in code and in the city.
+        Building clean, efficient software from the ground up. A full-stack generalist
+        comfortable across the entire stack — from polished interfaces to backend systems.
+        Based in California, open to internships and entry-level opportunities.
       </p>
       <div class="hero-cta">
         <a href="#projects" class="btn btn-primary">View my work</a>
@@ -786,7 +853,6 @@
 
   <!-- ─── ABOUT ─────────────────────────────────────────────────── -->
   <div id="about-wrap">
-    <!-- SWAP background photo here -->
     <div class="bg-photo" style="background-image: url('images/about-bg.jpg');"></div>
     <section class="p-section" id="about">
       <div class="section-meta">
@@ -802,7 +868,7 @@
           <div class="about-text">
             <p>Hi, I'm <strong>Brian Vo</strong> — a Computer Science student and full-stack generalist with a passion for building things that work beautifully. I'm comfortable across the entire stack, from frontend interfaces to backend systems.</p>
             <p>Currently sharpening my skills across Python, JavaScript, C++, and Oracle SQL — always looking for the next problem worth solving and the next thing worth building.</p>
-            <p>Outside of code, I shoot photography — from dense city streets to quiet woodland trails. That same eye for detail and atmosphere carries into everything I build.</p>
+            <p>Outside of code, I enjoy photography — from dense city streets to quiet woodland trails. That same eye for detail and atmosphere carries into everything I build.</p>
           </div>
           <div class="about-details">
             <div class="about-detail">
@@ -836,7 +902,6 @@
 
   <!-- ─── SKILLS ───────────────────────────────────────────────── -->
   <div class="skills-bg">
-    <!-- SWAP background photo here -->
     <div class="bg-photo" style="background-image: url('images/skills-bg.jpg');"></div>
     <div class="p-section" id="skills">
       <div class="section-meta">
@@ -858,7 +923,6 @@
 
   <!-- ─── PROJECTS ─────────────────────────────────────────────── -->
   <div id="projects-wrap">
-    <!-- SWAP background photo here -->
     <div class="bg-photo" style="background-image: url('images/projects-bg.jpg');"></div>
     <section class="p-section" id="projects">
       <div class="section-meta">
@@ -870,7 +934,7 @@
           <div>
             <div class="project-status"><span class="status-dot"></span>In progress</div>
             <div class="project-title">Project Placeholder</div>
-            <p class="project-desc">Add a short description of what you're currently building. What does it do? What problem does it solve? Replace this when you're ready.</p>
+            <p class="project-desc">Add a short description of what you're currently working on. What does it do? What problem does it solve? Replace this when you're ready.</p>
             <div class="project-tags"><span class="tag">Python</span><span class="tag">JavaScript</span></div>
           </div>
           <div class="project-arrow">→</div>
@@ -890,35 +954,74 @@
 
   <div class="divider"></div>
 
-  <!-- ─── PHOTO STRIP ──────────────────────────────────────────────
-       Add your photos by replacing the background-image values below.
-       Example: style="background-image: url('images/photo1.jpg');"
-       You can add or remove .strip-photo divs to change the count.
-       Remove the "placeholder" class once you add a real photo.
-  ─────────────────────────────────────────────────────────────── -->
-  <div class="photo-strip-wrap" id="photos">
-    <div class="photo-strip-label">Photography — urban &amp; nature</div>
-    <div class="photo-strip">
-      <div class="strip-photo placeholder" style="background-image: url('images/photo1.jpg');">Add photo</div>
-      <div class="strip-photo placeholder" style="background-image: url('images/photo2.jpg');">Add photo</div>
-      <div class="strip-photo placeholder" style="background-image: url('images/photo3.jpg');">Add photo</div>
-      <div class="strip-photo placeholder" style="background-image: url('images/photo4.jpg');">Add photo</div>
-      <div class="strip-photo placeholder" style="background-image: url('images/photo5.jpg');">Add photo</div>
-      <div class="strip-photo placeholder" style="background-image: url('images/photo6.jpg');">Add photo</div>
-      <div class="strip-photo placeholder" style="background-image: url('images/photo7.jpg');">Add photo</div>
-      <div class="strip-photo placeholder" style="background-image: url('images/photo8.jpg');">Add photo</div>
-    </div>
+  <!-- ─── CERTIFICATES ─────────────────────────────────────────── -->
+  <!--
+    TO ADD A CERTIFICATE:
+    1. Duplicate a .cert-card block below
+    2. Update cert-issuer, cert-name, cert-desc, cert-date, cert-badge
+    3. Add a link to your credential by setting href on .cert-link
+    4. Remove href="#" and replace with your real certificate URL
+  -->
+  <div id="certs-wrap">
+    <div class="bg-photo" style="background-image: url('images/certs-bg.jpg');"></div>
+    <section class="p-section" id="certificates">
+      <div class="section-meta">
+        <span class="section-num">04 —</span>
+        <h2 class="section-title">Certificates &amp; <em>credentials</em></h2>
+      </div>
+      <div class="certs-grid">
+
+        <!-- Certificate 1 — Anthropic Academy (example) -->
+        <div class="cert-card">
+          <a href="#" class="cert-link" aria-label="View certificate"></a>
+          <span class="cert-icon">🎓</span>
+          <div class="cert-issuer">Anthropic Academy</div>
+          <div class="cert-name">AI Fluency: Framework &amp; Foundations</div>
+          <p class="cert-desc">Covers core AI concepts, delegation frameworks, and practical collaboration with AI systems.</p>
+          <div class="cert-footer">
+            <span class="cert-date">2025</span>
+            <span class="cert-badge">In progress</span>
+          </div>
+        </div>
+
+        <!-- Certificate 2 — Placeholder -->
+        <div class="cert-card">
+          <a href="#" class="cert-link" aria-label="View certificate"></a>
+          <span class="cert-icon">📜</span>
+          <div class="cert-issuer">Issuing Organization</div>
+          <div class="cert-name">Certificate Name</div>
+          <p class="cert-desc">A short description of what this certificate covers and what you learned or demonstrated.</p>
+          <div class="cert-footer">
+            <span class="cert-date">Year</span>
+            <span class="cert-badge">Completed</span>
+          </div>
+        </div>
+
+        <!-- Certificate 3 — Placeholder -->
+        <div class="cert-card">
+          <a href="#" class="cert-link" aria-label="View certificate"></a>
+          <span class="cert-icon">📜</span>
+          <div class="cert-issuer">Issuing Organization</div>
+          <div class="cert-name">Certificate Name</div>
+          <p class="cert-desc">A short description of what this certificate covers and what you learned or demonstrated.</p>
+          <div class="cert-footer">
+            <span class="cert-date">Year</span>
+            <span class="cert-badge">Completed</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
   </div>
 
   <div class="divider"></div>
 
   <!-- ─── CONTACT ──────────────────────────────────────────────── -->
   <div id="contact-wrap">
-    <!-- SWAP background photo here -->
     <div class="bg-photo" style="background-image: url('images/contact-bg.jpg');"></div>
     <section class="p-section" id="contact">
       <div class="section-meta">
-        <span class="section-num">04 —</span>
+        <span class="section-num">05 —</span>
         <h2 class="section-title">Let's <em>connect</em></h2>
       </div>
       <div class="contact-grid">
@@ -960,9 +1063,25 @@
   </div>
 
   <footer>
-    <span>Brian Vo — CS Student & Developer</span>
-    <span>Built with HTML, CSS & JS</span>
+    <span>Brian Vo — CS Student &amp; Developer</span>
+    <span>Built with HTML, CSS &amp; JS</span>
   </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+      // Persist preference
+      localStorage.setItem('theme', html.getAttribute('data-theme'));
+    }
+
+    // Load saved preference on page load
+    (function () {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 
 </body>
 </html>
